@@ -1,38 +1,31 @@
 import { AppProps } from "next/app";
-import Image from "next/image";
-import { Handbag } from "@phosphor-icons/react";
-import Link from "next/link";
-import * as Dialog from '@radix-ui/react-dialog';
+
+import { CartProvider } from "use-shopping-cart";
 
 import { globalStyles } from "../styles/global";
-import logoImg from '../../assets/logo.svg'
-import { Container, Header } from "../styles/pages/app";
-import { CartModal } from "../components/cart-modal";
+import { Container } from "../styles/pages/app";
+import { LayoutHeader } from "../components/header";
 
 globalStyles();
 
 export default function App({ Component, pageProps }: AppProps) {
+
+
   return (
-    <Container>
-      <Header>
-        <Link href="/">
-          <Image src={logoImg} alt="" />
-        </Link>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <button type="button">
-              <Handbag size={24} />
+    <CartProvider
+      shouldPersist
+      cartMode="client-only"
+      stripe={process.env.STRIPE_PUBLIC_KEY as string}
+      successUrl={`${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`}
+      cancelUrl={`${process.env.NEXT_URL}/`}
+      mode="payment"
+      currency="BRL"
+    >
+      <Container>
+        <LayoutHeader />
 
-              <div>
-                1
-              </div>
-            </button>
-          </Dialog.Trigger>
-          <CartModal />
-        </Dialog.Root>
-      </Header>
-
-      <Component {...pageProps} />
-    </Container>
+        <Component {...pageProps} />
+      </Container>
+    </CartProvider>
   )
 }

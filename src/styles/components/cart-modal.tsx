@@ -85,7 +85,14 @@ export const CartItemImageContainer = styled("div", {
   background: "linear-gradient(180deg, #1ea483 0%, #7465d4 100%)",
   borderRadius: 8,
   width: 100,
-  height: 100
+  height: 100,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  img: {
+    objectFit: "cover"
+  }
 });
 
 export const CartItemListContainer = styled("div", {

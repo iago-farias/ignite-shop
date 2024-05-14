@@ -3,6 +3,8 @@ import { GetStaticProps } from "next";
 import Stripe from "stripe";
 import { useKeenSlider } from 'keen-slider/react';
 import Link from "next/link";
+import { Handbag } from "@phosphor-icons/react";
+import { useShoppingCart } from "use-shopping-cart";
 
 import { HomeContainer, Product } from "../styles/pages/home";
 
@@ -11,12 +13,16 @@ import { stripe } from "../lib/stripe";
 import Head from "next/head";
 
 interface HomeProps {
-  products: {
-    id: string;
-    name: string;
-    imageUrl: string;
-    price: string
-  }[]
+  products: Product[]
+}
+
+type Product = {
+  id: string;
+  name: string;
+  imageUrl: string;
+  priceFormatted: string;
+  price: number;
+  priceId: string;
 }
 
 export default function Home({ products }: HomeProps) {
@@ -25,7 +31,19 @@ export default function Home({ products }: HomeProps) {
       perView: 3,
       spacing: 48
     }
-  })
+  });
+  const { addItem } = useShoppingCart();
+
+  function handleAddProductToCart(product: Product) {
+    addItem({
+      name: product.name,
+      id: product.id,
+      price_id: product.priceId,
+      image: product.imageUrl,
+      currency: "BRL",
+      price: product.price
+    });
+  }
 
   return (
     <>
@@ -44,8 +62,14 @@ export default function Home({ products }: HomeProps) {
                 <Image src={product.imageUrl} width={520} height={480} alt="" />
 
                 <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{product.priceFormatted}</span>
+                  </div>
+
+                  <button onClick={() => handleAddProductToCart(product)}>
+                    <Handbag size={24} />
+                  </button>
                 </footer>
               </Product>
             </Link>
@@ -68,10 +92,12 @@ export const getStaticProps: GetStaticProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: price.unit_amount ? new Intl.NumberFormat("pt-BR", {
+      priceFormatted: price.unit_amount ? new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL"
-      }).format(price.unit_amount / 100) : 0
+      }).format(price.unit_amount / 100) : 0,
+      price: price.unit_amount,
+      priceId: price.id
     }
   });
 
