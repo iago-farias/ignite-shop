@@ -3,9 +3,9 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useShoppingCart } from 'use-shopping-cart';
 import { useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 
 import { Cart, CartItem, CartItemImageContainer, CartItemListContainer, CloseButtonContainer } from '../styles/components/cart-modal';
-import Image from 'next/image';
 
 export function CartModal() {
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false);
