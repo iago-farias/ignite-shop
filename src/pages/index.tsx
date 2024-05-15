@@ -5,12 +5,12 @@ import { useKeenSlider } from 'keen-slider/react';
 import Link from "next/link";
 import { Handbag } from "@phosphor-icons/react";
 import { useShoppingCart } from "use-shopping-cart";
+import Head from "next/head";
 
 import { HomeContainer, Product } from "../styles/pages/home";
 
 import "keen-slider/keen-slider.min.css";
 import { stripe } from "../lib/stripe";
-import Head from "next/head";
 
 interface HomeProps {
   products: Product[]
@@ -53,26 +53,28 @@ export default function Home({ products }: HomeProps) {
       <HomeContainer ref={sliderRef} className="keen-slider">
         {
           products.map(product => (
-            <Link
+            <Product
               key={product.id}
-              href={`/product/${product.id}`}
-              prefetch={false}
+              className="keen-slider__slide"
             >
-              <Product className="keen-slider__slide">
+              <Link
+                href={`/product/${product.id}`}
+                prefetch={false}
+              >
                 <Image src={product.imageUrl} width={520} height={480} alt="" />
+              </Link>
 
-                <footer>
-                  <div>
-                    <strong>{product.name}</strong>
-                    <span>{product.priceFormatted}</span>
-                  </div>
+              <footer>
+                <div>
+                  <strong>{product.name}</strong>
+                  <span>{product.priceFormatted}</span>
+                </div>
 
-                  <button onClick={() => handleAddProductToCart(product)}>
-                    <Handbag size={24} />
-                  </button>
-                </footer>
-              </Product>
-            </Link>
+                <button onClick={() => handleAddProductToCart(product)}>
+                  <Handbag size={24} />
+                </button>
+              </footer>
+            </Product>
           ))
         }
       </HomeContainer>

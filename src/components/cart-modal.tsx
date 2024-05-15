@@ -10,7 +10,7 @@ import { Cart, CartItem, CartItemImageContainer, CartItemListContainer, CloseBut
 export function CartModal() {
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false);
 
-  const { cartDetails, cartCount, totalPrice, redirectToCheckout, removeItem } = useShoppingCart();
+  const { cartDetails, cartCount, totalPrice, removeItem } = useShoppingCart();
 
   const cartItems = cartDetails ? Object.values(cartDetails) : [];
 
@@ -114,7 +114,7 @@ export function CartModal() {
             </div>
 
             <button
-              disabled={isCreatingCheckoutSession}
+              disabled={isCreatingCheckoutSession || cartItems.length === 0}
               onClick={handleCheckout}
             >
               Finalizar compra

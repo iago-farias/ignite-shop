@@ -51,8 +51,12 @@ export const Cart = styled("div", {
       fontWeight: "bold",
       marginTop: 57,
 
-      "&:hover": {
+      "&:not(:disabled):hover": {
         backgroundColor: "$green300",
+      },
+
+      "&:disabled": {
+        cursor: "not-allowed",
       }
     }
   }
